@@ -1,6 +1,6 @@
 use std::ffi::CString;
 
-pub fn execute_command(command: &str) {
+pub fn run(command: &str) {
     let args: Vec<&str> = command.split_whitespace().collect();
     unsafe {
         let pid = libc::fork();
@@ -22,7 +22,7 @@ pub fn execute_command(command: &str) {
                 let err = libc::execvp(c_command.as_ptr(), c_args_ptrs.as_ptr());
 
                 if err == -1 {
-                    println!("not found");
+                    println!("command not found: {:?}", c_command.as_c_str());
                     libc::exit(1);
                 }
             }
