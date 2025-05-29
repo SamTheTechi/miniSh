@@ -1,5 +1,5 @@
 [package]
-name = "miniShell"
+name = "mini_sh"
 version = "0.1.0"
 edition = "2024"
 
