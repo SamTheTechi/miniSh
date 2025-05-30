@@ -12,6 +12,7 @@
 * **Configuration Support**:
 
   * Reads a `~/minish.conf` file at startup to preload aliases and environment exports.
+  * Change target compilation in .cargo to your systems Architure, by default(x86_64-unknown-linux-gnu).
 * **Command Execution**:
 
   * Executes non-built-in commands via `execvp` using libc.

@@ -4,7 +4,9 @@ use std::{collections::HashMap, env, fs};
 
 pub fn strip_quotes(s: &str) -> &str {
     let s = s.trim();
-    if s.starts_with('"') && s.ends_with('"') && s.len() >= 2 {
+    if ((s.starts_with('"') && s.ends_with('"')) || (s.starts_with("'") && s.ends_with("'")))
+        && s.len() >= 2
+    {
         &s[1..s.len() - 1]
     } else {
         s

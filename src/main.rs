@@ -24,28 +24,43 @@ fn main() {
             }
 
             let mut parts = command.splitn(2, ' ');
-            let cmd_word = parts.next().unwrap();
-            let cmd_args = parts.next().unwrap_or("").trim();
-            let expanded_command = hashmap
-                .get(cmd_word)
-                .map(|s| s.as_str())
-                .unwrap_or(cmd_word);
 
-            match expanded_command {
+            let original_cmd = parts.next().unwrap();
+            let original_args = parts.next().unwrap_or("").trim();
+
+            let expanded = hashmap
+                .get(original_cmd)
+                .map(|s| s.as_str())
+                .unwrap_or(original_cmd);
+
+            let mut new_parts = expanded.splitn(2, ' ');
+
+            let real_cmd = new_parts.next().unwrap();
+            let alias_args = new_parts.next().unwrap_or("").trim();
+
+            let combined_args = if alias_args.is_empty() {
+                original_args.to_string()
+            } else if original_args.is_empty() {
+                alias_args.to_string()
+            } else {
+                format!("{} {}", alias_args, original_args)
+            };
+
+            match real_cmd {
                 "cd" => {
-                    change_directory::run(&cmd_args);
+                    change_directory::run(&combined_args);
                 }
                 "exports" => {
-                    export_path::run(&command);
+                    export_path::run(&format!("{} {}", real_cmd, combined_args));
                 }
                 "alias" => {
-                    aliase::run(&command, &mut hashmap);
+                    aliase::run(&format!("{} {}", real_cmd, combined_args), &mut hashmap);
                 }
                 "exit" => unsafe {
                     libc::exit(0);
                 },
                 _ => {
-                    execute_command::run(&expanded_command);
+                    execute_command::run(&format!("{} {}", real_cmd, combined_args));
                 }
             }
         }
