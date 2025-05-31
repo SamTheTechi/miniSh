@@ -38,12 +38,13 @@ pub fn process_minishrc(hashmap: &mut HashMap<String, String>) {
         .filter(|s| !s.is_empty() && !s.starts_with('#'));
 
     for cmd in unrefine_commands {
-        if cmd.starts_with("alias ") {
-            aliase::run(&cmd, hashmap);
-        } else if cmd.starts_with("exports ") {
-            export_path::run(&cmd);
-        } else {
-            eprintln!("Unknown command: {}", cmd);
+        let (c_cmd, c_args) = cmd.split_once(" ").unwrap();
+
+        match c_cmd {
+            "alias" => aliase::run(&c_args, hashmap),
+            "exports" => export_path::run(&c_args),
+            "echo" => echo::run(&c_args),
+            _ => execute_command::run(&cmd),
         }
     }
 }

@@ -6,14 +6,14 @@ pub fn run(command: &str) {
         0 => {
             let new_home_path = env::var("HOME").unwrap_or_else(|_| "/".to_string());
             if let Err(e) = env::set_current_dir(new_home_path) {
-                eprintln!("Error changing directory: {}", e);
+                eprintln!("cd: Error changing directory: {}", e);
             }
         }
         1 => {
             let new_path = command[0].trim();
             let root = Path::new(new_path);
             if let Err(e) = env::set_current_dir(root) {
-                eprintln!("Error changing directory: {}", e);
+                eprintln!("cd: Error changing directory: {}", e);
             }
         }
         _ => {

@@ -7,7 +7,7 @@ pub fn run(command: &str) {
 
         match pid {
             -1 => {
-                eprint!("Eroe while forking");
+                eprint!("minish: Eroe while forking");
             }
             0 => {
                 let c_command = CString::new(args[0]).unwrap();
@@ -22,7 +22,7 @@ pub fn run(command: &str) {
                 let err = libc::execvp(c_command.as_ptr(), c_args_ptrs.as_ptr());
 
                 if err == -1 {
-                    println!("command not found: {:?}", c_command.as_c_str());
+                    println!("minish: command not found: {:?}", c_command.as_c_str());
                     libc::exit(1);
                 }
             }
@@ -30,7 +30,7 @@ pub fn run(command: &str) {
                 let mut status: libc::c_int = 0;
                 let err = libc::waitpid(pid, &mut status, 0);
                 if err == -1 {
-                    eprint!("error while waiting");
+                    eprint!("minish: error while waiting");
                 }
             }
         }

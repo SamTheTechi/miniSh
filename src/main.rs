@@ -1,3 +1,4 @@
+use libc::{SIG_IGN, SIGINT, signal};
 use mini_sh::builtin::*;
 use std::collections::HashMap;
 use std::io::{Write, stdin, stdout};
@@ -6,7 +7,10 @@ fn main() {
     let mut hashmap: HashMap<String, String> = HashMap::new();
     let _ = mini_sh::process_minishrc(&mut hashmap);
 
-    println!("Welcome to mini_sh!!");
+    unsafe {
+        signal(SIGINT, SIG_IGN);
+    }
+
     loop {
         print!("-→ ");
         stdout()
@@ -51,10 +55,16 @@ fn main() {
                     change_directory::run(&combined_args);
                 }
                 "exports" => {
-                    export_path::run(&format!("{} {}", real_cmd, combined_args));
+                    export_path::run(&combined_args);
                 }
                 "alias" => {
-                    aliase::run(&format!("{} {}", real_cmd, combined_args), &mut hashmap);
+                    aliase::run(&combined_args, &mut hashmap);
+                }
+                "pwd" => {
+                    print_working_dir::run(&combined_args);
+                }
+                "echo" => {
+                    echo::run(&combined_args);
                 }
                 "exit" => unsafe {
                     libc::exit(0);
